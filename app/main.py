@@ -12,8 +12,6 @@ async def lifespan(app: FastAPI):
     yield
     # This runs when the server stops
 
-from fastapi.middleware.cors import CORSMiddleware
-
 app = FastAPI(title="LangGraph Agent API", lifespan=lifespan)
 
 # Setup CORS to allow the React frontend to communicate with this API

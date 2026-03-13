@@ -1,4 +1,4 @@
-import { Home, CheckCircle, Calendar, Clock } from 'lucide-react';
+import { Home, CheckCircle, Calendar, Clock, Sparkles, PlusCircle } from 'lucide-react';
 
 const Sidebar = ({
     currentView,
@@ -7,7 +7,8 @@ const Sidebar = ({
     setIsSidebarOpen,
     tasksCount,
     meetingsCount,
-    remindersCount
+    remindersCount,
+    onQuickAction
 }) => {
     return (
         <>
@@ -67,6 +68,33 @@ const Sidebar = ({
                         {remindersCount > 0 && <span className="ml-auto bg-slate-900 text-xs px-2 py-0.5 rounded-full">{remindersCount}</span>}
                     </button>
                 </nav>
+
+                <div className="px-4 py-2 border-t border-white/5">
+                    <h3 className="text-[10px] uppercase font-bold text-slate-500 tracking-wider mb-2 px-2">Quick Actions</h3>
+                    <div className="flex flex-col gap-1">
+                        <button 
+                            onClick={() => { onQuickAction('Add task: '); setIsSidebarOpen(false); }}
+                            className="flex items-center gap-3 px-4 py-2 text-xs text-slate-400 hover:text-emerald-400 hover:bg-emerald-500/5 rounded-lg transition-all group"
+                        >
+                            <PlusCircle className="w-4 h-4 group-hover:scale-110 transition-transform" />
+                            <span>Quick Task</span>
+                        </button>
+                        <button 
+                             onClick={() => { onQuickAction('Schedule meeting: '); setIsSidebarOpen(false); }}
+                            className="flex items-center gap-3 px-4 py-2 text-xs text-slate-400 hover:text-blue-400 hover:bg-blue-500/5 rounded-lg transition-all group"
+                        >
+                            <Calendar className="w-4 h-4 group-hover:scale-110 transition-transform" />
+                            <span>New Meeting</span>
+                        </button>
+                        <button 
+                             onClick={() => { onQuickAction('Set reminder: '); setIsSidebarOpen(false); }}
+                            className="flex items-center gap-3 px-4 py-2 text-xs text-slate-400 hover:text-purple-400 hover:bg-purple-500/5 rounded-lg transition-all group"
+                        >
+                            <Clock className="w-4 h-4 group-hover:scale-110 transition-transform" />
+                            <span>Set Reminder</span>
+                        </button>
+                    </div>
+                </div>
 
                 <div className="p-4 border-t border-white/5 text-xs text-slate-500 font-mono text-center">
                     LangGraph Multi-Agent Runtime

@@ -5,6 +5,7 @@ import HomeView from './components/HomeView';
 import TasksView from './components/TasksView';
 import MeetingsView from './components/MeetingsView';
 import RemindersView from './components/RemindersView';
+import InsightsView from './components/InsightsView';
 
 const App = () => {
   // Navigation State
@@ -127,6 +128,12 @@ const App = () => {
     }
   };
 
+  const handleQuickAction = (text) => {
+    setCurrentView('home');
+    setInput(text);
+    // Focus the chat input implicitly by setting currentView to home which has the input
+  };
+
   // --- Main Layout ---
   return (
     <div className="flex h-screen bg-slate-900 overflow-hidden text-slate-200 font-sans">
@@ -147,6 +154,7 @@ const App = () => {
         tasksCount={tasks.length}
         meetingsCount={meetings.length}
         remindersCount={reminders.length}
+        onQuickAction={handleQuickAction}
       />
 
       {/* Main Content Area */}
@@ -171,6 +179,13 @@ const App = () => {
           {currentView === 'tasks' && <TasksView tasks={tasks} />}
           {currentView === 'meetings' && <MeetingsView meetings={meetings} />}
           {currentView === 'reminders' && <RemindersView reminders={reminders} />}
+          {currentView === 'insights' && (
+            <InsightsView 
+              tasksCount={tasks.length} 
+              meetingsCount={meetings.length} 
+              remindersCount={reminders.length} 
+            />
+          )}
         </div>
       </main>
 
