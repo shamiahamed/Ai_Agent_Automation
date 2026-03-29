@@ -1,4 +1,4 @@
-import { Home, CheckCircle, Calendar, Clock, Sparkles, PlusCircle } from 'lucide-react';
+import { Home, CheckCircle, Calendar, Clock, Sparkles, PlusCircle, Briefcase, Search } from 'lucide-react';
 
 const Sidebar = ({
     currentView,
@@ -67,6 +67,14 @@ const Sidebar = ({
                         <span className="font-medium">Reminders</span>
                         {remindersCount > 0 && <span className="ml-auto bg-slate-900 text-xs px-2 py-0.5 rounded-full">{remindersCount}</span>}
                     </button>
+
+                    <button
+                        onClick={() => { setCurrentView('career'); setIsSidebarOpen(false); }}
+                        className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${currentView === 'career' ? 'bg-indigo-500/20 text-indigo-300 border border-indigo-500/30' : 'hover:bg-slate-800 text-slate-400 hover:text-slate-200'}`}
+                    >
+                        <Briefcase className="w-5 h-5" />
+                        <span className="font-medium">Career</span>
+                    </button>
                 </nav>
 
                 <div className="px-4 py-2 border-t border-white/5">
@@ -92,6 +100,13 @@ const Sidebar = ({
                         >
                             <Clock className="w-4 h-4 group-hover:scale-110 transition-transform" />
                             <span>Set Reminder</span>
+                        </button>
+                        <button 
+                             onClick={() => { onQuickAction('Scout for jobs: '); setIsSidebarOpen(false); }}
+                            className="flex items-center gap-3 px-4 py-2 text-xs text-slate-400 hover:text-indigo-400 hover:bg-indigo-500/5 rounded-lg transition-all group"
+                        >
+                            <Search className="w-4 h-4 group-hover:scale-110 transition-transform" />
+                            <span>Scout Jobs</span>
                         </button>
                     </div>
                 </div>

@@ -6,6 +6,7 @@ import TasksView from './components/TasksView';
 import MeetingsView from './components/MeetingsView';
 import RemindersView from './components/RemindersView';
 import InsightsView from './components/InsightsView';
+import CareerView from './components/CareerView';
 
 const App = () => {
   // Navigation State
@@ -19,6 +20,8 @@ const App = () => {
   const [notifications, setNotifications] = useState([]);
   const [activeAlert, setActiveAlert] = useState(null);
   const [dismissedAlerts, setDismissedAlerts] = useState(new Set());
+  const [jobs, setJobs] = useState([]);
+  const [profile, setProfile] = useState(null);
 
   // Chat State
   const [input, setInput] = useState('');
@@ -36,18 +39,32 @@ const App = () => {
   // Fetch all data from backend
   const fetchData = async () => {
     try {
-      const [tasksRes, meetingsRes, remindersRes] = await Promise.all([
+      const [tasksRes, meetingsRes, remindersRes, jobsRes, profileRes] = await Promise.all([
         fetch('http://localhost:8000/tasks'),
         fetch('http://localhost:8000/meetings'),
-        fetch('http://localhost:8000/reminders')
+        fetch('http://localhost:8000/reminders'),
+        fetch('http://localhost:8000/jobs'),
+        fetch('http://localhost:8000/profile')
       ]);
 
       if (tasksRes.ok) setTasks(await tasksRes.json());
       if (meetingsRes.ok) setMeetings(await meetingsRes.json());
       if (remindersRes.ok) setReminders(await remindersRes.json());
+      if (jobsRes.ok) setJobs(await jobsRes.json());
+      if (profileRes.ok) setProfile(await profileRes.json());
     } catch (error) {
       console.error("Error fetching data:", error);
     }
+  };
+
+  const handleUpdateProfile = async (formData) => {
+    const prompt = `Update my profile: My name is ${formData.full_name}, email is ${formData.email}, skills are ${formData.skills}, bio is ${formData.bio}, target roles are ${formData.target_roles}`;
+    await handleSubmit({ preventDefault: () => {} }, prompt);
+  };
+
+  const handleApplyToJob = async (job) => {
+    const prompt = `Apply to the job: ${job.title} at ${job.company}`;
+    await handleSubmit({ preventDefault: () => {} }, prompt);
   };
 
   // Initial fetch and scroll setup
@@ -84,12 +101,12 @@ const App = () => {
   }, [reminders, dismissedAlerts]);
 
   // Handle user submission
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!input.trim()) return;
+  const handleSubmit = async (e, manualInput = null) => {
+    if (e && e.preventDefault) e.preventDefault();
+    const userMsg = manualInput || input.trim();
+    if (!userMsg) return;
 
-    const userMsg = input.trim();
-    setInput('');
+    if (!manualInput) setInput('');
     setChatHistory(prev => [...prev, { role: 'user', content: userMsg }]);
     setIsLoading(true);
 
@@ -107,21 +124,19 @@ const App = () => {
         content: data.response || "Something went wrong."
       }]);
 
-      // Add notification
       setNotifications(prev => [{
         id: Date.now(),
-        message: `Action completed: ${userMsg}`,
+        message: `Action completed: ${userMsg.slice(0, 30)}...`,
         time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-      }, ...prev].slice(0, 5)); // Keep last 5
+      }, ...prev].slice(0, 5));
 
-      // Re-fetch data immediately to update tables
       await fetchData();
 
     } catch (error) {
       console.error("Agent Error:", error);
       setChatHistory(prev => [...prev, {
         role: 'assistant',
-        content: "Error communicating with the backend. Is the server running?"
+        content: "Error communicating with the backend."
       }]);
     } finally {
       setIsLoading(false);
@@ -179,6 +194,14 @@ const App = () => {
           {currentView === 'tasks' && <TasksView tasks={tasks} />}
           {currentView === 'meetings' && <MeetingsView meetings={meetings} />}
           {currentView === 'reminders' && <RemindersView reminders={reminders} />}
+          {currentView === 'career' && (
+            <CareerView 
+              jobs={jobs} 
+              profile={profile} 
+              onUpdateProfile={handleUpdateProfile}
+              onApply={handleApplyToJob}
+            />
+          )}
           {currentView === 'insights' && (
             <InsightsView 
               tasksCount={tasks.length} 
