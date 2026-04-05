@@ -4,16 +4,26 @@ import { Briefcase, User, Send, ExternalLink, ShieldCheck, Zap, Loader2 } from '
 const CareerView = ({ jobs, profile, onUpdateProfile, onApply }) => {
   const [activeTab, setActiveTab] = useState('feed'); // 'feed' or 'profile'
   const [isUpdating, setIsUpdating] = useState(false);
-  const [profileForm, setProfileForm] = useState(profile || {
-    full_name: '',
-    email: '',
-    skills: '',
-    bio: '',
-    target_roles: ''
-  });
+  const defaultForm = {
+    full_name: '', email: '', phone: '', linkedin_url: '',
+    gender: 'Male', disability: 'No', sponsorship: 'Yes',
+    skills: '', bio: '', target_roles: ''
+  };
+  
+  const [profileForm, setProfileForm] = useState(profile ? { ...defaultForm, ...profile } : defaultForm);
 
   useEffect(() => {
-    if (profile) setProfileForm(profile);
+    if (profile) {
+      setProfileForm({
+        ...defaultForm,
+        ...profile,
+        gender: profile.gender || 'Male',
+        disability: profile.disability || 'No',
+        sponsorship: profile.sponsorship || 'Yes',
+        phone: profile.phone || '',
+        linkedin_url: profile.linkedin_url || ''
+      });
+    }
   }, [profile]);
 
   const handleProfileSubmit = async (e) => {
@@ -153,6 +163,67 @@ const CareerView = ({ jobs, profile, onUpdateProfile, onApply }) => {
                   className="w-full bg-slate-900/50 border border-white/10 rounded-2xl px-5 py-4 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all"
                   placeholder="john@example.com"
                 />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-2">
+                <label className="text-sm font-semibold text-slate-400 ml-1">Phone Number</label>
+                <input 
+                  type="text" 
+                  value={profileForm.phone || ''}
+                  onChange={(e) => setProfileForm({...profileForm, phone: e.target.value})}
+                  className="w-full bg-slate-900/50 border border-white/10 rounded-2xl px-5 py-4 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all"
+                  placeholder="+1 234 567 8900"
+                />
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-semibold text-slate-400 ml-1">LinkedIn URL</label>
+                <input 
+                  type="text" 
+                  value={profileForm.linkedin_url || ''}
+                  onChange={(e) => setProfileForm({...profileForm, linkedin_url: e.target.value})}
+                  className="w-full bg-slate-900/50 border border-white/10 rounded-2xl px-5 py-4 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all"
+                  placeholder="https://linkedin.com/in/johndoe"
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="space-y-2">
+                <label className="text-sm font-semibold text-slate-400 ml-1">Gender</label>
+                <select 
+                  value={profileForm.gender}
+                  onChange={(e) => setProfileForm({...profileForm, gender: e.target.value})}
+                  className="w-full bg-slate-900/50 border border-white/10 rounded-2xl px-5 py-4 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all"
+                >
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                  <option value="Decline">Decline to self-identify</option>
+                </select>
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-semibold text-slate-400 ml-1">Disability Status</label>
+                <select 
+                  value={profileForm.disability}
+                  onChange={(e) => setProfileForm({...profileForm, disability: e.target.value})}
+                  className="w-full bg-slate-900/50 border border-white/10 rounded-2xl px-5 py-4 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all"
+                >
+                  <option value="No">No, I do not have a disability</option>
+                  <option value="Yes">Yes, I have a disability</option>
+                  <option value="Decline">Decline to answer</option>
+                </select>
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-semibold text-slate-400 ml-1">Visa Sponsorship</label>
+                <select 
+                  value={profileForm.sponsorship}
+                  onChange={(e) => setProfileForm({...profileForm, sponsorship: e.target.value})}
+                  className="w-full bg-slate-900/50 border border-white/10 rounded-2xl px-5 py-4 text-white focus:outline-none focus:ring-2 focus:ring-indigo-500/50 transition-all"
+                >
+                  <option value="Yes">Yes, I require sponsorship</option>
+                  <option value="No">No, I do not require sponsorship</option>
+                </select>
               </div>
             </div>
 

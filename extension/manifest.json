@@ -1,0 +1,30 @@
+{
+  "manifest_version": 3,
+  "name": "AgentOS Auto-Apply",
+  "version": "1.0",
+  "description": "Auto-fills job applications using your AgentOS AI Profile.",
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "tabs"
+  ],
+  "host_permissions": [
+    "http://localhost:8000/*",
+    "*://*/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "*://*/*"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "run_at": "document_idle"
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "AgentOS"
+  }
+}

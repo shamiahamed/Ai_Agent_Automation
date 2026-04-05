@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      width: 320px;
+      padding: 20px;
+      background: #0f172a; /* matches AgentOS dark slate */
+      color: #f1f5f9;
+      margin: 0;
+    }
+    h2 {
+      margin-top: 0;
+      font-size: 18px;
+      color: #818cf8;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .profile-info {
+      background: #1e293b;
+      padding: 15px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      font-size: 13px;
+      line-height: 1.5;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+    .profile-info strong {
+      color: #94a3b8;
+      font-weight: 600;
+    }
+    .profile-info span {
+      color: #e2e8f0;
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(to right, #4f46e5, #9333ea);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-weight: bold;
+      font-size: 14px;
+      cursor: pointer;
+      transition: opacity 0.2s, transform 0.1s;
+      box-shadow: 0 4px 12px rgba(79, 70, 229, 0.2);
+    }
+    button:hover {
+      opacity: 0.9;
+    }
+    button:active {
+      transform: scale(0.98);
+    }
+    button:disabled {
+      background: #334155;
+      color: #94a3b8;
+      box-shadow: none;
+      cursor: not-allowed;
+    }
+    .status {
+      margin-top: 12px;
+      font-size: 12px;
+      text-align: center;
+      color: #94a3b8;
+      min-height: 15px;
+    }
+  </style>
+</head>
+<body>
+  <h2>⚡ AgentOS Auto-Apply</h2>
+  
+  <div id="profileContainer" class="profile-info">
+    <div style="text-align: center; color: #64748b;">Connecting to local backend...</div>
+  </div>
+  
+  <button id="autoFillBtn" disabled>Auto-Fill Application</button>
+  <div id="statusMsg" class="status"></div>
+  
+  <script src="popup.js"></script>
+</body>
+</html>

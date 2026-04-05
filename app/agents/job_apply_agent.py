@@ -1,5 +1,6 @@
 import json
 import datetime
+import webbrowser
 from app.llm_config import llm
 from app.database.db import SessionLocal
 from app.database.models import JobListing, JobProfile
@@ -12,7 +13,7 @@ def job_apply_agent(state: dict):
     if "set my profile" in user_input.lower() or "update my profile" in user_input.lower():
         prompt = f"""
         Extract the following information from the user's message: "{user_input}"
-        Return JSON field: full_name, email, skills, bio, target_roles.
+        Return JSON field: full_name, email, phone, linkedin_url, gender, disability, sponsorship, skills, bio, target_roles.
         """
         try:
             response = llm.invoke(prompt)
@@ -65,7 +66,16 @@ def job_apply_agent(state: dict):
         job.status = "Applied"
         job.draft_message = response.content
         db.commit()
-        return {"result": f"🚀 **Applied to {job.title} at {job.company}!**\n\n**Drafted Message:**\n\n{response.content}"}
+        
+        # Determine the correct URL separator and trigger the Ghost Browser
+        try:
+            sep = "&" if "?" in job.link else "?"
+            target_url = f"{job.link}{sep}agentos_autofill=true"
+            webbrowser.open(target_url)
+        except Exception as e:
+            print(f"Failed to open browser automatically: {e}")
+            
+        return {"result": f"🚀 **Applied to {job.title} at {job.company}!**\n\n**Ghost Browser Launched!** Check your active browser—your application is being automatically filled out.\n\n**Drafted Cover Letter:**\n\n{response.content}"}
     except Exception as e:
         return {"result": f"Job Apply Error: {str(e)}"}
     finally:

@@ -7,7 +7,7 @@ from datetime import datetime
 router = APIRouter()
 
 @router.post("/agent")
-async def chat_endpoint(payload: AgentInput):
+def chat_endpoint(payload: AgentInput):
     from .agent_graph import app_graph
     state = {"input": payload.input}
     result = app_graph.invoke(state)
@@ -76,6 +76,11 @@ def get_profile():
     return {
         "full_name": profile.full_name,
         "email": profile.email,
+        "phone": profile.phone,
+        "linkedin_url": profile.linkedin_url,
+        "gender": profile.gender,
+        "disability": profile.disability,
+        "sponsorship": profile.sponsorship,
         "skills": profile.skills,
         "bio": profile.bio,
         "target_roles": profile.target_roles

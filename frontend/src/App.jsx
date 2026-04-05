@@ -58,13 +58,17 @@ const App = () => {
   };
 
   const handleUpdateProfile = async (formData) => {
-    const prompt = `Update my profile: My name is ${formData.full_name}, email is ${formData.email}, skills are ${formData.skills}, bio is ${formData.bio}, target roles are ${formData.target_roles}`;
-    await handleSubmit({ preventDefault: () => {} }, prompt);
+    const prompt = `Update my profile: My name is ${formData.full_name}, email is ${formData.email}, phone is ${formData.phone}, linkedin_url is ${formData.linkedin_url}, gender is ${formData.gender}, disability is ${formData.disability}, sponsorship is ${formData.sponsorship}, skills are ${formData.skills}, bio is ${formData.bio}, target roles are ${formData.target_roles}`;
+    await handleSubmit({ preventDefault: () => { } }, prompt);
   };
 
   const handleApplyToJob = async (job) => {
+    // Force the browser to open the tab immediately, bypassing backend OS restrictions
+    const sep = job.link.includes('?') ? '&' : '?';
+    window.open(`${job.link}${sep}agentos_autofill=true`, '_blank', 'noreferrer');
+
     const prompt = `Apply to the job: ${job.title} at ${job.company}`;
-    await handleSubmit({ preventDefault: () => {} }, prompt);
+    await handleSubmit({ preventDefault: () => { } }, prompt);
   };
 
   // Initial fetch and scroll setup
@@ -195,18 +199,18 @@ const App = () => {
           {currentView === 'meetings' && <MeetingsView meetings={meetings} />}
           {currentView === 'reminders' && <RemindersView reminders={reminders} />}
           {currentView === 'career' && (
-            <CareerView 
-              jobs={jobs} 
-              profile={profile} 
+            <CareerView
+              jobs={jobs}
+              profile={profile}
               onUpdateProfile={handleUpdateProfile}
               onApply={handleApplyToJob}
             />
           )}
           {currentView === 'insights' && (
-            <InsightsView 
-              tasksCount={tasks.length} 
-              meetingsCount={meetings.length} 
-              remindersCount={reminders.length} 
+            <InsightsView
+              tasksCount={tasks.length}
+              meetingsCount={meetings.length}
+              remindersCount={reminders.length}
             />
           )}
         </div>
